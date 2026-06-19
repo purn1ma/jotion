@@ -12,14 +12,15 @@ import { File } from 'lucide-react'
 
 type document = {
   id: string
+  slug: string | null
   title: string
   userId: string
   parentDocumentId: string | null
-  isArchived: boolean 
+  isArchived: boolean
   content: string | null
-  coverImage: string | null 
-  icon: string | null 
-  isPublished: boolean 
+  coverImage: string | null
+  icon: string | null
+  isPublished: boolean
 }
 
 const SearchCommand = () => {
@@ -35,10 +36,12 @@ const SearchCommand = () => {
   const { data: searchDocuments } = useQuery({
     queryKey: ["document", "getDocument", "searchDocument"],
     queryFn: async () => {
-      const { data } = await axios.get("/api/document/getDocument/search")
-      return data as document[]
-    }
-  })
+      const { data } = await axios.get("/api/document/getDocument/search");
+      return Array.isArray(data) ? (data as document[]) : [];
+    },
+    enabled: isOpen,
+    staleTime: 30 * 1000,
+  });
 
   useEffect(() => {
     setIsMounted(true);
@@ -56,8 +59,8 @@ const SearchCommand = () => {
     return () => document.removeEventListener("keydown", down);
   }, [toggle])
 
-  const onSelect = (id: string) => {
-    router.push(`/documents/${id}`);
+  const onSelect = (doc: document) => {
+    router.push(`/documents/${doc.slug ?? doc.id}`);
     onClose();
   };
 
@@ -81,7 +84,7 @@ const SearchCommand = () => {
               key={doc.id}
               value={`${doc.id}-${doc.title}`}
               title={doc.title}
-              onSelect={() => onSelect(doc.id)}
+              onSelect={() => onSelect(doc)}
             >
               {doc.icon ? (
                 <p>

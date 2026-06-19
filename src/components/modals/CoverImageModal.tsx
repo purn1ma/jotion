@@ -49,24 +49,26 @@ export const CoverImageModal = () => {
       setIsSubmitting(true)
       setFile(file)
 
-      let res;
+      try {
+        let res;
 
-      if(coverImage.url) {
-        res = await edgestore.publicFiles.upload({
-          file,
-          options: {
-            replaceTargetUrl: coverImage.url
-          }
-        })
-      } else {
-        res = await edgestore.publicFiles.upload({
-          file
-        })
+        if(coverImage.url) {
+          res = await edgestore.publicFiles.upload({
+            file,
+            options: {
+              replaceTargetUrl: coverImage.url
+            }
+          })
+        } else {
+          res = await edgestore.publicFiles.upload({ file })
+        }
+
+        updateDocument(res.url)
+        onClose()
+      } catch {
+        toast.error("Failed to upload image")
+        setIsSubmitting(false)
       }
-
-      updateDocument(res.url)
-
-      onClose()
     }
   }
 

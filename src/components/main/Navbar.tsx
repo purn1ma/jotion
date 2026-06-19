@@ -23,12 +23,17 @@ const Navbar: FC<NavbarProps> = ({ isCollapsed, onResetWidth }) => {
   const { data: document } = useQuery({
     queryKey: ["getDocument", "getById", params.documentId],
     queryFn: async () => {
-      const { data: rawData } = await axios.get(
-        `/api/document/getDocument/getById/${params.documentId}`
-      );
-      return rawData as document;
+      try {
+        const { data: rawData } = await axios.get(
+          `/api/document/getDocument/getById/${params.documentId}`
+        );
+        return rawData as document;
+      } catch (err) {
+        console.error("[Navbar] Failed to fetch document:", params.documentId, err);
+        throw err;
+      }
     },
-    cacheTime: 0
+    staleTime: 30 * 1000,
   });
   if (document === undefined) {
     return (

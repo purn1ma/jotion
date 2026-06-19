@@ -1,12 +1,13 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
     const session = await getAuthSession();
 
     if (!session?.user) {
-      return new Response("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const documents = await db.document.findMany({
@@ -19,8 +20,9 @@ export async function GET(req: Request) {
       },
     });
 
-    return new Response(JSON.stringify(documents));
+    return NextResponse.json(documents);
   } catch (error) {
-    return new Response("Not able to fetch document");
+    console.error("[SEARCH_DOCUMENTS]", error);
+    return NextResponse.json({ error: "Not able to fetch document" }, { status: 500 });
   }
 }

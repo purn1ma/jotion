@@ -1,5 +1,6 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
@@ -9,7 +10,7 @@ export async function PATCH(
     const session = await getAuthSession();
 
     if (!session?.user) {
-      return new Response("Unauthenticated", { status: 401 });
+      return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
     }
 
     const documentId = params.slug;
@@ -21,11 +22,11 @@ export async function PATCH(
     });
 
     if (!existingDocument) {
-      return new Response("Not Found");
+      return NextResponse.json({ error: "Not Found" }, { status: 404 });
     }
 
     if (existingDocument.userId !== session.user.id) {
-      return new Response("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const recursiveArchive = async (documentId: string) => {
@@ -50,8 +51,9 @@ export async function PATCH(
 
     await recursiveArchive(documentId);
 
-    return new Response(JSON.stringify(document));
+    return NextResponse.json(document);
   } catch (error) {
-    return new Response("Error occured")
+    console.error("[ARCHIVE_DOCUMENT]", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

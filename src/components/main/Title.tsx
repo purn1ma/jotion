@@ -15,6 +15,7 @@ interface TitleProps {
 
 const Title: FC<TitleProps> = ({ initialData }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
   const queryClient = useQueryClient()
   const [title, setTitle] = useState(initialData.title);
   const [isEditing, setIsEditing] = useState(false);
@@ -25,7 +26,7 @@ const Title: FC<TitleProps> = ({ initialData }) => {
         title
       }
       const { data } = await axios.patch("/api/document/update", payload)
-      return data as string
+      return data as document
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["document"])
@@ -33,13 +34,13 @@ const Title: FC<TitleProps> = ({ initialData }) => {
     }
   })
 
-  // Updating title on pressing enter
   const onKeyDown = (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter") {
+      clearTimeout(debounceRef.current);
       disableInput();
-      updateTitle({ id: initialData.id, title: title || "untitle" })
+      updateTitle({ id: initialData.id, title: title || "Untitled" })
     }
   };
 
@@ -52,12 +53,15 @@ const Title: FC<TitleProps> = ({ initialData }) => {
     }, 0);
   };
 
-  // To see real time changes in sidebar's document title you have to put updateTitle in onChange function
   const onChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setTitle(event.target.value);
-    updateTitle({ id: initialData.id, title: title || "untitle" })
+    const newTitle = event.target.value;
+    setTitle(newTitle);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      updateTitle({ id: initialData.id, title: newTitle || "Untitled" });
+    }, 300);
   };
 
   const disableInput = () => {

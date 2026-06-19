@@ -1,0 +1,34 @@
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "jotion", schema "public" at "postgres:5432"
+
+The database is already in sync with the Prisma schema.
+
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "neondb", schema "public" at "ep-wandering-heart-aqsklrd8-pooler.c-8.us-east-1.aws.neon.tech"
+
+🚀  Your database is now in sync with your Prisma schema. Done in 13.51s
+
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "neondb", schema "public" at "ep-wandering-heart-aqsklrd8-pooler.c-8.us-east-1.aws.neon.tech"
+
+The database is already in sync with the Prisma schema.
+
+┌─────────────────────────────────────────────────────────┐
+│  Update available 5.5.2 -> 7.8.0                        │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "neondb", schema "public" at "ep-wandering-heart-aqsklrd8-pooler.c-8.us-east-1.aws.neon.tech"
+
+The database is already in sync with the Prisma schema.
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[G✔ Generated Prisma Client (v5.5.2) to ./node_modules/@prisma/client in 172ms
+

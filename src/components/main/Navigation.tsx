@@ -31,6 +31,7 @@ import Navbar from "./Navbar";
 
 export type document = {
   id: string;
+  slug: string | null;
   title: string;
   userId: string;
   parentDocumentId: string | null;
@@ -41,9 +42,12 @@ export type document = {
   isPublished: boolean;
 };
 
-interface NavigationProps {}
+interface NavigationProps {
+  initialDocuments?: document[];
+  user?: { name: string; email: string; image: string };
+}
 
-const Navigation: FC<NavigationProps> = ({}) => {
+const Navigation: FC<NavigationProps> = ({ initialDocuments, user }) => {
   const search = useSearch();
   const pathname = usePathname();
   const params = useParams();
@@ -179,7 +183,7 @@ const Navigation: FC<NavigationProps> = ({}) => {
 
         {/*  */}
         <div>
-          <UserItem />
+          <UserItem user={user} />
           <Item
             label="Search"
             icon={Search}
@@ -192,7 +196,7 @@ const Navigation: FC<NavigationProps> = ({}) => {
 
         {/* Showing the documents */}
         <div className="mt-4">
-          <DocumentList />
+          <DocumentList initialDocuments={initialDocuments} />
           <Item onClick={() => onCreate()} icon={Plus} label="Add a page" />
 
           <Popover>

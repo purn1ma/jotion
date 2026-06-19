@@ -6,6 +6,8 @@ import Providers from "@/components/providers/SessionProvider";
 import { Toaster } from "sonner";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import { ModalProvider } from "@/components/providers/modal-provider";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { GlobalErrorHandler } from "@/components/GlobalErrorHandler";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,8 +47,9 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <Toaster position="bottom-center" />
+              <GlobalErrorHandler />
               <ModalProvider />
-              {children}
+              <ErrorBoundary>{children}</ErrorBoundary>
             </ThemeProvider>
           </EdgeStoreProvider>
         </Providers>

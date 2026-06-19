@@ -12,22 +12,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
-import { redirect } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "../ui/Button";
 
 interface UserItemProps {
-  
+  user?: { name: string; email: string; image: string };
 }
 
-const UserItem = ({}) => {
+const UserItem = ({ user: serverUser }: UserItemProps) => {
+  const { data: session } = useSession();
 
-  const { data: session } = useSession()
-
-  // if session is not there then redirect them to marketing page
-  // if(!session) {
-  //   return redirect('/')
-  // }
+  // Use server-provided data immediately, fall back to session once loaded
+  const name = serverUser?.name || session?.user.name || "";
+  const email = serverUser?.email || session?.user.email || "";
+  const image = serverUser?.image || session?.user.image || "";
 
   return (
     <DropdownMenu>
@@ -35,17 +33,16 @@ const UserItem = ({}) => {
         <div role="button" className="flex items-center text-sm p-3 w-full hover:bg-primary/5">
           <div className="gap-x-2 flex items-center max-w-[150px]">
             <Avatar className="h-5 w-5">
-              <AvatarImage src={session?.user.image ?? ""} /> 
+              <AvatarImage src={image} />
             </Avatar>
             <span className="text-start font-medium line-clamp-1">
-              {session?.user.name}&apos;s Jotion
+              {name}&apos;s Jotion
             </span>
           </div>
           <ChevronsLeftRight className="rotate-90 ml-2 text-muted-foreground h-4 w-4" />
         </div>
       </DropdownMenuTrigger>
 
-      {/* Dropdown menu content */}
       <DropdownMenuContent
         className="w-80"
         align="start"
@@ -54,17 +51,17 @@ const UserItem = ({}) => {
       >
         <div className="flex flex-col space-y-4 p-2">
           <p className="text-xs font-medium leading-none text-muted-foreground">
-            {session?.user.email}
+            {email}
           </p>
           <div className="flex items-center gap-x-2">
-            <div className="rounded-md bg-secondary p-1"> 
+            <div className="rounded-md bg-secondary p-1">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={session?.user.image || ""} />
+                <AvatarImage src={image} />
               </Avatar>
             </div>
             <div className="space-y-1">
               <p className="text-sm line-clamp-1">
-                {session?.user.name}&apos;s Jotion
+                {name}&apos;s Jotion
               </p>
             </div>
           </div>

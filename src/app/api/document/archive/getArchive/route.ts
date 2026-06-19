@@ -1,12 +1,13 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
     const session = await getAuthSession();
 
     if (!session?.user) {
-      return new Response("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const document = await db.document.findMany({
@@ -19,8 +20,8 @@ export async function GET(req: Request) {
       }
     });
 
-    return new Response(JSON.stringify(document))
+    return NextResponse.json(document);
   } catch (error) {
-    return new Response("Error occured")
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

@@ -1,17 +1,10 @@
-"use client"
-
-import Editor from '@/components/Editor'
-import Toolbar from '@/components/Toolbar'
-import { Cover, CoverSkeleton } from '@/components/cover'
-import { Skeleton } from '@/components/ui/skeleton'
-import { UpdateDocumentPayload } from '@/lib/validators/document'
+import { getAuthSession } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { redirect } from 'next/navigation'
 import { document } from '@/types/document'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import axios from 'axios'
-import { FC, useMemo } from 'react'
-import dynamic from 'next/dynamic'
-import { toast } from 'sonner'
-
+import DocumentEditor from './DocumentEditor'
+import { CoverSkeleton } from '@/components/cover'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface pageProps {
   params: {
@@ -19,36 +12,21 @@ interface pageProps {
   }
 }
 
-const Page: FC<pageProps> = ({ params }) => {
+const Page = async ({ params }: pageProps) => {
+  const session = await getAuthSession()
 
-  const editor = useMemo(() => dynamic(() => import("@/components/Editor"), { ssr: false }), [])
+  if (!session?.user) {
+    redirect('/')
+  }
 
-  const { data: document } = useQuery({
-    queryKey: ["getDocument", "getById", params.documentId],
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/document/getDocument/getById/${params.documentId}`)
-      return data as document
-    }
+  const doc = await db.document.findFirst({
+    where: {
+      userId: session.user.id,
+      OR: [{ slug: params.documentId }, { id: params.documentId }],
+    },
   })
 
-  const { mutate: updateContent } = useMutation({
-    mutationFn: async (content: string) => {
-      const payload: UpdateDocumentPayload = {
-        id: params.documentId,
-        content,
-      }
-      const { data } = await axios.patch('/api/document/update', payload)
-      return data as document
-    },
-    onError: () => {
-      toast.error("Error occured")
-    },
-    onSuccess: () => {
-      // queryClient.invalidateQueries(["document"])
-    }
-  })
-
-  if (document === undefined) {
+  if (!doc) {
     return (
       <div>
         <CoverSkeleton />
@@ -61,21 +39,10 @@ const Page: FC<pageProps> = ({ params }) => {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
-  return (
-    <div>
-      <Cover url={document.coverImage || ""} />
-      <div>
-        <Toolbar initialData={document} />
-        <Editor
-          updateContent={updateContent}
-          initialContent={document.content}
-        />
-      </div>
-    </div>
-  )
+  return <DocumentEditor params={params} initialData={doc as document} />
 }
 
 export default Page

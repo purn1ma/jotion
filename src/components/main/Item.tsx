@@ -12,17 +12,18 @@ import {
   Plus,
   Trash,
 } from "lucide-react";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { toast } from "sonner";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
 import { document } from "@/types/document";
-import { DropdownMenu, DropdownMenuSeparator } from "../ui/DropdownMenu";
 import {
+  DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+} from "../ui/DropdownMenu";
 import { useSession } from "next-auth/react";
 
 interface ItemProps {
@@ -55,8 +56,6 @@ const Item: FC<ItemProps> = ({
   const router = useRouter();
   const { data: session } = useSession();
 
-  const [newDoc, setNewDoc] = useState<document>();
-
   const handleExpand = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -70,6 +69,7 @@ const Item: FC<ItemProps> = ({
       return data as string;
     },
     onError: (err) => {
+      console.error("[Item] Archive failed:", err);
       if (err instanceof AxiosError) {
         if (err.response?.status === 401) {
           return toast.error("Login Required.");
@@ -93,9 +93,10 @@ const Item: FC<ItemProps> = ({
         parentDocumentId: id,
       };
       const { data } = await axios.post("/api/document/create", payload);
-      return data as string;
+      return data as document;
     },
     onError: (err) => {
+      console.error("[Item] Create document failed:", err);
       if (err instanceof AxiosError) {
         if (err.response?.status === 401) {
           return toast.error("Login Required.");
@@ -103,24 +104,21 @@ const Item: FC<ItemProps> = ({
       }
       toast.error("Failed to create new Note");
     },
-    onSuccess: (data: string) => {
+    onSuccess: (data) => {
       toast.success("New note created!");
       queryClient.invalidateQueries(["document"]);
-      const parseData = JSON.parse(data);
-      setNewDoc(parseData);
+      if (!expanded) {
+        onExpand?.();
+      }
+      const created = data as document;
+      router.push(`/documents/${created.slug ?? created.id}`);
     },
   });
 
-  // On Creating New note using Plus Icon
   const onCreateDoc = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     if (!id) return;
     onCreate();
-    console.log("Item Expanded",expanded)
-    if (!expanded) {
-      onExpand && onExpand();
-    }
-    // router.push(`/documents/${newDoc?.id}`)
   };
 
   return (

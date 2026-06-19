@@ -1,18 +1,18 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { document } from "@/types/document";
+import { NextResponse } from "next/server";
 
 export async function DELETE(req: Request, { params }: { params: { slug: string } }) {
   try {
     const session = await getAuthSession();
-    
+
     if (!session?.user) {
-      return new Response("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    
+
     const documentId = params.slug;
 
-    // Searching for archive document
     const existingDocument: document | null = await db.document.findUnique({
       where: {
         id: documentId,
@@ -20,11 +20,11 @@ export async function DELETE(req: Request, { params }: { params: { slug: string 
     });
 
     if (!existingDocument) {
-      return new Response("Document not found");
+      return NextResponse.json({ error: "Document not found" }, { status: 404 });
     }
 
     if (existingDocument.userId !== session.user.id) {
-      return new Response("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     await db.document.delete({
@@ -32,8 +32,10 @@ export async function DELETE(req: Request, { params }: { params: { slug: string 
         id: documentId,
       },
     });
-    return new Response("OK");
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    return new Response("Could not delete document")
+    console.error("[DELETE_DOCUMENT]", error);
+    return NextResponse.json({ error: "Could not delete document" }, { status: 500 });
   }
 }

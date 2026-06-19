@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { nanoid } from "nanoid";
 import GoogleProvider from "next-auth/providers/google"
 import { db } from "./db";
+import { cache } from "react";
 
 function getGoogleCredentials() {
   const clientId = process.env.GOOGLE_CLIENT_ID
@@ -45,6 +46,13 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async jwt({token, user}) {
+      // Token already fully populated — skip the DB lookup on every API call.
+      // This runs on every getServerSession() call, so avoiding the DB query
+      // here eliminates one round-trip per API request.
+      if (token.id) {
+        return token
+      }
+
       const dbUser = await db.user.findFirst({
         where: {
           email: token.email
@@ -81,4 +89,6 @@ export const authOptions: NextAuthOptions = {
   }
 }
  
-export const getAuthSession = () => getServerSession(authOptions)
+// cache() deduplicates calls within a single server request — if the layout,
+// page, and API route all call getAuthSession(), the JWT is decoded only once.
+export const getAuthSession = cache(() => getServerSession(authOptions))

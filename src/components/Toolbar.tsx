@@ -1,7 +1,7 @@
 "use client"
 
 import { document } from '@/types/document'
-import { ElementRef, FC, useRef, useState } from 'react'
+import { ElementRef, FC, useCallback, useRef, useState } from 'react'
 import { IconPicker } from './IconPicker'
 import { Button } from './ui/Button'
 import { ImageIcon, Smile, X } from 'lucide-react'
@@ -20,6 +20,7 @@ interface ToolbarProps {
 const Toolbar: FC<ToolbarProps> = ({ initialData, preview }) => {
   const queryClient = useQueryClient()
   const inputRef = useRef<ElementRef<"textarea">>(null)
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(initialData.title);
 
@@ -76,9 +77,10 @@ const Toolbar: FC<ToolbarProps> = ({ initialData, preview }) => {
 
   const onInput = (value: string) => {
     setValue(value);
-    updateDocument({
-      value
-    });
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      updateDocument({ value });
+    }, 300);
   };
 
   const onKeyDown = (

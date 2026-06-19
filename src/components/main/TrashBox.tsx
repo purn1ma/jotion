@@ -24,10 +24,19 @@ const TrashBox: FC<TrashBoxProps> = ({}) => {
   const { data: archivedDocuments } = useQuery({
     queryKey: ["document", "archive"],
     queryFn: async () => {
-      const { data: archivedDocuments } = await axios.get(
-        "/api/document/archive/getArchive"
-      );
-      return archivedDocuments as document[];
+      try {
+        const { data: archivedDocuments } = await axios.get(
+          "/api/document/archive/getArchive"
+        );
+        if (!Array.isArray(archivedDocuments)) {
+          console.warn("[TrashBox] Expected array from API, got:", typeof archivedDocuments, archivedDocuments);
+          return [] as document[];
+        }
+        return archivedDocuments as document[];
+      } catch (err) {
+        console.error("[TrashBox] Failed to fetch archived documents:", err);
+        return [] as document[];
+      }
     },
   });
 
@@ -73,8 +82,8 @@ const TrashBox: FC<TrashBoxProps> = ({}) => {
     return doc.title.toLowerCase().includes(search.toLowerCase());
   });
 
-  const onClick = (documentId: string) => {
-    router.push(`/documents/${documentId}`);
+  const onClick = (doc: document) => {
+    router.push(`/documents/${doc.slug ?? doc.id}`);
   };
 
   if (archivedDocuments === undefined) {
@@ -109,7 +118,7 @@ const TrashBox: FC<TrashBoxProps> = ({}) => {
           <div key={doc.id} className="flex items-center">
             <div
               role="button"
-              onClick={() => onClick(doc.id)}
+              onClick={() => onClick(doc)}
               className="text-sm rounded-sm w-full h-6 hover:bg-primary/5 text-primary justify-between "
             >
               <span className="truncate pl-2 items-center">{doc.title}</span>

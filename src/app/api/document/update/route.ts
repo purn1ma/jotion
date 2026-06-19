@@ -1,13 +1,14 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { UpdateDocumentValidator } from "@/lib/validators/document";
+import { NextResponse } from "next/server";
 
 export async function PATCH(req: Request) {
   try {
     const session = await getAuthSession()
 
     if(!session?.user) {
-      return new Response("Unauthorized", { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json()
@@ -19,13 +20,13 @@ export async function PATCH(req: Request) {
     })
 
     if(!existingDocument) {
-      return new Response("Not Found")
+      return NextResponse.json({ error: "Not Found" }, { status: 404 });
     }
 
     if (existingDocument.userId !== session.user.id) {
-      throw new Error("Unauthorized");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    // if any data which is undefiend then this will not update the data to undefiend
+
     const updatedDocument = await db.document.update({
       where: {
         id,
@@ -39,8 +40,9 @@ export async function PATCH(req: Request) {
       }
     })
 
-    return new Response(JSON.stringify(updatedDocument))
+    return NextResponse.json(updatedDocument);
   } catch (error: any) {
-    return new Response(error)
+    console.error("[UPDATE_DOCUMENT]", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
