@@ -1,7 +1,7 @@
 import { getAuthSession } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { redirect } from 'next/navigation'
-import { document } from '@/types/document'
+import type { document } from '@/types/document'
 import DocumentEditor from './DocumentEditor'
 import { CoverSkeleton } from '@/components/cover'
 import { Skeleton } from '@/components/ui/skeleton'

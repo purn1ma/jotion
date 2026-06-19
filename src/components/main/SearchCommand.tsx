@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearch } from '@/hooks/use-search'
-import { document } from '@/types/document'
+import type { document } from '@/types/document'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'

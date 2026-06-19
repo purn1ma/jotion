@@ -8,7 +8,7 @@ import { useEdgeStore } from "@/lib/edgestore"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
 import { UpdateDocumentPayload } from "@/lib/validators/document"
-import { document } from '@/types/document'
+import type { document } from '@/types/document'
 import axios from "axios"
 import { toast } from "sonner"
 

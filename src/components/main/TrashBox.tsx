@@ -4,7 +4,7 @@ import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { FC, useState } from "react";
-import { document } from "@/types/document";
+import type { document } from "@/types/document";
 import { Spinner } from "../Spinner";
 import { Search, Trash, Undo } from "lucide-react";
 import { Input } from "../ui/input";

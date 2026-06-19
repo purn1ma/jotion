@@ -28,7 +28,7 @@ import {
 import TrashBox from "./TrashBox";
 import { useSearch } from "@/hooks/use-search";
 import Navbar from "./Navbar";
-import { document } from "@/types/document";
+import type { document } from "@/types/document";
 
 interface NavigationProps {
   initialDocuments?: document[];
@@ -78,6 +78,7 @@ const Navigation: FC<NavigationProps> = ({ initialDocuments, user }) => {
     } else {
       resetWidth();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
 
   useEffect(() => {

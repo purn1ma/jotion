@@ -9,7 +9,7 @@ import Title, { TitleSkeleton } from "./Title";
 import Menu, { MenuSkeleton } from "./Menu";
 import Banner from "./Banner";
 import Publish from "./Publish";
-import { document } from "@/types/document";
+import type { document } from "@/types/document";
 import { useRouter } from "next/navigation";
 
 interface NavbarProps {

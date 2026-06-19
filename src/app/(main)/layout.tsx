@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import { redirect } from 'next/navigation'
 import Navigation from '@/components/main/Navigation'
 import SearchCommand from '@/components/main/SearchCommand'
-import { document } from '@/types/document'
+import type { document } from '@/types/document'
 
 interface MainLayoutProps {
   children: ReactNode
@@ -14,7 +14,7 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
   const session = await getAuthSession()
 
   if (!session?.user) {
-    redirect('/')
+    redirect('/sign-in')
   }
 
   // Kick off the document prefetch immediately — session is already resolved above

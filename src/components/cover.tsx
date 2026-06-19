@@ -11,7 +11,7 @@ import { useCoverImage } from "@/hooks/use-cover-image";
 import { useEdgeStore } from "@/lib/edgestore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { document } from "@/types/document";
+import type { document } from "@/types/document";
 import axios from "axios";
 
 interface CoverImageProps {

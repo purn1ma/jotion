@@ -16,7 +16,7 @@ import { FC } from "react";
 import { toast } from "sonner";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
-import { document } from "@/types/document";
+import type { document } from "@/types/document";
 import {
   DropdownMenu,
   DropdownMenuContent,

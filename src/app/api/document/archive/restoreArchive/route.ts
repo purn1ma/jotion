@@ -1,7 +1,7 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { document } from "@/types/document";
+import type { document } from "@/types/document";
 
 export async function PATCH(req: Request, { params }: { params: { slug: string }}) {
   try {

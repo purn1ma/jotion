@@ -1,6 +1,6 @@
 "use client"
 
-import { document } from '@/types/document'
+import type { document } from '@/types/document'
 import { ElementRef, FC, useCallback, useRef, useState } from 'react'
 import { IconPicker } from './IconPicker'
 import { Button } from './ui/Button'

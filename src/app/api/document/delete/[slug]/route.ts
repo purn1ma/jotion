@@ -1,6 +1,6 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { document } from "@/types/document";
+import type { document } from "@/types/document";
 import { NextResponse } from "next/server";
 
 export async function DELETE(req: Request, { params }: { params: { slug: string } }) {

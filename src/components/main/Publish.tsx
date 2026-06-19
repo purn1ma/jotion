@@ -1,4 +1,4 @@
-import { document } from '@/types/document'
+import type { document } from '@/types/document'
 import { FC } from 'react'
 
 interface PublishProps {
