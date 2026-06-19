@@ -4,10 +4,9 @@ import { FC, useState } from 'react'
 import { Button } from '../ui/Button'
 import { Icons } from '../Icons'
 import { signIn } from 'next-auth/react'
+import { toast } from 'sonner'
 
-interface UserAuthFormProps {
-  
-}
+interface UserAuthFormProps {}
 
 const UserAuthForm: FC<UserAuthFormProps> = ({}) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -18,7 +17,7 @@ const UserAuthForm: FC<UserAuthFormProps> = ({}) => {
     try {
       await signIn("google")
     } catch (error) {
-      // toast notification
+      toast.error("Something went wrong. Please try again.")
     } finally {
       setIsLoading(false)
     }
