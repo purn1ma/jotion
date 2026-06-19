@@ -3,7 +3,6 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { nanoid } from "nanoid";
 import GoogleProvider from "next-auth/providers/google"
 import { db } from "./db";
-import { cache } from "react";
 
 function getGoogleCredentials() {
   const clientId = process.env.GOOGLE_CLIENT_ID
@@ -86,6 +85,4 @@ export const authOptions: NextAuthOptions = {
   }
 }
  
-// cache() deduplicates calls within a single server request — if the layout,
-// page, and API route all call getAuthSession(), the JWT is decoded only once.
-export const getAuthSession = cache(() => getServerSession(authOptions))
+export const getAuthSession = () => getServerSession(authOptions)
