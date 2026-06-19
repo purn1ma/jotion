@@ -83,8 +83,12 @@ export const authOptions: NextAuthOptions = {
         username: dbUser.username,
       }
     },
-    redirect() {
-      return '/'
+    redirect({ url, baseUrl }) {
+      // Honour relative callbackUrls (e.g. /documents/abc) and same-origin absolutes.
+      // Fall back to /documents so login always lands on the app, not the marketing page.
+      if (url.startsWith('/')) return url
+      if (url.startsWith(baseUrl)) return url
+      return baseUrl + '/documents'
     }
   }
 }
