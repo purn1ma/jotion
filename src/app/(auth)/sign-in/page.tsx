@@ -1,12 +1,16 @@
+import { redirect } from 'next/navigation'
 import SignIn from '@/components/auth/SignIn'
 import { buttonVariants } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
-import { FC } from 'react'
+import { getAuthSession } from '@/lib/auth'
 
 
-const page = () => {
+const page = async () => {
+  const session = await getAuthSession()
+  if (session?.user) redirect('/documents')
+
   return (
     <div className="absolute inset-0">
       <div className="h-full max-w-2xl mx-auto flex flex-col items-center justify-center gap-4">
