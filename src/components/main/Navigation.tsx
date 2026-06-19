@@ -28,19 +28,7 @@ import {
 import TrashBox from "./TrashBox";
 import { useSearch } from "@/hooks/use-search";
 import Navbar from "./Navbar";
-
-export type document = {
-  id: string;
-  slug: string | null;
-  title: string;
-  userId: string;
-  parentDocumentId: string | null;
-  isArchived: boolean;
-  content: string | null;
-  coverImage: string | null;
-  icon: string | null;
-  isPublished: boolean;
-};
+import { document } from "@/types/document";
 
 interface NavigationProps {
   initialDocuments?: document[];

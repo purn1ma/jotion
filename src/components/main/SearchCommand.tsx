@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearch } from '@/hooks/use-search'
-// import { document } from '@/types/document'
+import { document } from '@/types/document'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
@@ -9,19 +9,6 @@ import { FC, useEffect, useState } from 'react'
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command'
 import { useSession } from 'next-auth/react'
 import { File } from 'lucide-react'
-
-type document = {
-  id: string
-  slug: string | null
-  title: string
-  userId: string
-  parentDocumentId: string | null
-  isArchived: boolean
-  content: string | null
-  coverImage: string | null
-  icon: string | null
-  isPublished: boolean
-}
 
 const SearchCommand = () => {
   const router = useRouter()
