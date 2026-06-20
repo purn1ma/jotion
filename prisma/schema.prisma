@@ -70,7 +70,7 @@ model Document {
   parentDocumentId String?
   parentDocument   ParentDocument? @relation(fields: [parentDocumentId], references: [id])
   isArchived       Boolean
-  content          String?         @db.VarChar(4000)
+  content          String?         @db.Text
   coverImage       String?
   icon             String?
   isPublished      Boolean
@@ -78,6 +78,7 @@ model Document {
   updatedAt        DateTime        @updatedAt
 
   @@index([userId])
-  @@index([userId, parentDocumentId])
+  @@index([userId, isArchived])
+  @@index([userId, parentDocumentId, isArchived])
   @@index([slug])
 }
