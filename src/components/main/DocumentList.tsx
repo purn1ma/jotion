@@ -116,7 +116,7 @@ const DocumentList: FC<DocumentListProps> = ({
                   document.slug ?? document.id,
                 ]);
               }}
-              label={document.title}
+              label={document.title || "Untitled"}
               icon={FileIcon}
               documentIcon={document.icon || ""}
               active={params.documentId === (document.slug ?? document.id)}

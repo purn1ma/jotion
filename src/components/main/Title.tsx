@@ -91,7 +91,7 @@ const Title: FC<TitleProps> = ({ initialData }) => {
           className="font-normal h-auto p-1"
         >
           <span className="truncate">
-            {title}
+            {title || "Untitled"}
           </span>
         </Button>
       )}

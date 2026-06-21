@@ -79,7 +79,7 @@ const TrashBox: FC<TrashBoxProps> = ({}) => {
 
   // searching for archived document according to user search
   const filteredArchivedDocuments = archivedDocuments?.filter((doc) => {
-    return doc.title.toLowerCase().includes(search.toLowerCase());
+    return (doc.title || "").toLowerCase().includes(search.toLowerCase());
   });
 
   const onClick = (doc: document) => {
@@ -121,7 +121,7 @@ const TrashBox: FC<TrashBoxProps> = ({}) => {
               onClick={() => onClick(doc)}
               className="text-sm rounded-sm w-full h-6 hover:bg-primary/5 text-primary justify-between "
             >
-              <span className="truncate pl-2 items-center">{doc.title}</span>
+              <span className="truncate pl-2 items-center">{doc.title || "Untitled"}</span>
             </div>
             {/* Undo Button */}
             <div className="flex items-center h-7">

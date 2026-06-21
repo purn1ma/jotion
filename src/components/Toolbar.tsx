@@ -1,7 +1,7 @@
 "use client"
 
 import type { document } from '@/types/document'
-import { ElementRef, FC, useCallback, useRef, useState } from 'react'
+import { ElementRef, FC, useCallback, useEffect, useRef, useState } from 'react'
 import { IconPicker } from './IconPicker'
 import { Button } from './ui/Button'
 import { ImageIcon, Smile, X } from 'lucide-react'
@@ -30,7 +30,7 @@ const Toolbar: FC<ToolbarProps> = ({ initialData, preview }) => {
     mutationFn: async ({ icon, value }: { icon?: string | undefined, value?: string | undefined }) => {
       const payload: UpdateDocumentPayload = {
         id: initialData.id,
-        title: value || "Untitled",
+        title: value ?? "",
         icon,
       }
       const { data } = await axios.patch('/api/document/update', payload)
@@ -74,6 +74,13 @@ const Toolbar: FC<ToolbarProps> = ({ initialData, preview }) => {
       inputRef.current?.focus();
     }, 0);
   };
+
+  useEffect(() => {
+    if (!initialData.title && !preview) {
+      enableInput();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onInput = (value: string) => {
     setValue(value);
@@ -150,14 +157,17 @@ const Toolbar: FC<ToolbarProps> = ({ initialData, preview }) => {
           onKeyDown={onKeyDown}
           value={value}
           onChange={(e) => onInput(e.target.value)}
-          className="text-5xl bg-transparent font-bold break-words outline-none text-[#3F3F3F] dark:text-[#CFCFCF] resize-none"
+          placeholder="Untitled"
+          className="text-5xl bg-transparent font-bold break-words outline-none text-[#3F3F3F] dark:text-[#CFCFCF] resize-none placeholder:text-[#3F3F3F]/30 dark:placeholder:text-[#CFCFCF]/30"
         />
       ) : (
         <div
           onClick={enableInput}
           className="pb-[11.5px] text-5xl font-bold break-words outline-none text-[#3F3F3F] dark:text-[#CFCFCF]"
         >
-          {initialData.title}
+          {initialData.title || (
+            <span className="text-[#3F3F3F]/30 dark:text-[#CFCFCF]/30">Untitled</span>
+          )}
         </div>
       )}
     </div>

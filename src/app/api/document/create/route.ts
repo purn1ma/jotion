@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     const doc = await db.document.create({
       data: {
         slug: generateSlug(),
-        title: title === "" ? "Untitled" : title,
+        title,
         parentDocumentId: parentDocumentId !== undefined ? parentDocumentId : null,
         userId: session.user.id,
         isArchived: false,

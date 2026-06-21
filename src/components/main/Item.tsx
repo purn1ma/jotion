@@ -89,7 +89,7 @@ const Item: FC<ItemProps> = ({
   const { mutate: onCreate } = useMutation({
     mutationFn: async () => {
       const payload: CreateDocumentPayload = {
-        title: "Untitled",
+        title: "",
         parentDocumentId: id,
       };
       const { data } = await axios.post("/api/document/create", payload);

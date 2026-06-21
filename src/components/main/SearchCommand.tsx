@@ -69,8 +69,8 @@ const SearchCommand = () => {
             // File Icon
             <CommandItem
               key={doc.id}
-              value={`${doc.id}-${doc.title}`}
-              title={doc.title}
+              value={`${doc.id}-${doc.title || "Untitled"}`}
+              title={doc.title || "Untitled"}
               onSelect={() => onSelect(doc)}
             >
               {doc.icon ? (
@@ -82,7 +82,7 @@ const SearchCommand = () => {
               )}
 
               {/* Icon */}
-              <span>{doc.title}</span>
+              <span>{doc.title || "Untitled"}</span>
             </CommandItem>
           ))}
         </CommandGroup>

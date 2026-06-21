@@ -50,13 +50,15 @@ const Navigation: FC<NavigationProps> = ({ initialDocuments, user }) => {
 
   const queryClient = useQueryClient();
 
+  const router = useRouter();
+
   const { mutate: onCreate } = useMutation({
     mutationFn: async () => {
       const payload: CreateDocumentPayload = {
         title: "",
       };
       const { data } = await axios.post("/api/document/create", payload);
-      return data as string;
+      return data as document;
     },
     onError: (err) => {
       if (err instanceof AxiosError) {
@@ -67,8 +69,8 @@ const Navigation: FC<NavigationProps> = ({ initialDocuments, user }) => {
       toast.error("Failed to create new Note");
     },
     onSuccess: (data) => {
-      toast.success("New note created!");
       queryClient.invalidateQueries(["document"]);
+      router.push(`/documents/${data.slug ?? data.id}`);
     },
   });
 
